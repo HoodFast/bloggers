@@ -3,7 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InterlayerNotice } from '../../../../base/models/inter.layer';
 import { UsersRepo } from '../../infrastructure/users.repository';
 import { UsersQueryRepo } from '../../infrastructure/users.query.repository';
-
+import { CreateUserType } from '../../infrastructure/types/create.user.type';
+import * as bcrypt from 'bcrypt';
 export class CreateUserCommand {
   constructor(
     public login: string,
@@ -27,57 +28,41 @@ export class CreateUserUseCase
     command: CreateUserCommand,
   ): Promise<InterlayerNotice<OutputUsersType>> {
     const notice = new InterlayerNotice<OutputUsersType>();
-    const checkUserExistLogin = await this.usersSqlRepository.doesExistByLogin(
+    const checkUserExistLogin = await this.usersSqlRepository.checkExistLogin(
       command.login,
     );
 
     if (checkUserExistLogin) {
-      notice.addError('user is already exist');
+      notice.addError('user is already exist', 'error', 403);
       return notice;
-      // throw new BadRequestException('user is already exist', 'login');
     }
 
-    const checkUserExistEmail = await this.usersSqlRepository.doesExistByEmail(
+    const checkUserExistEmail = await this.usersSqlRepository.checkExistEmail(
       command.email,
     );
 
     if (checkUserExistEmail) {
-      notice.addError('email is already exist');
+      notice.addError('email is already exist', 'error', 403);
       return notice;
-      // throw new BadRequestException('email is already exist', 'email');
     }
 
     const createdAt = new Date();
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(command.password, salt);
-
-    const userData = {
-      accountData: {
-        _passwordHash: hash,
-        createdAt,
-        email: command.email,
-        login: command.login,
-      },
-      emailConfirmation: {
-        confirmationCode: crypto.randomUUID(),
-        expirationDate: add(new Date(), {
-          minutes: 15,
-        }),
-        isConfirmed: command.isConfirmed ? command.isConfirmed : false,
-      },
-      tokensBlackList: [],
+    const createData: CreateUserType = {
+      _passwordHash: hash,
+      createdAt,
+      email: command.email,
+      login: command.login,
     };
 
-    const createdUser = await this.usersSqlRepository.createUser(userData);
+    const createdUser = await this.usersSqlRepository.createUser(createData);
     if (!createdUser) {
       notice.addError('error BD');
       return notice;
     }
 
-    if (!command.isConfirmed) {
-      await this.sendConfirmCode(createdUser!.email);
-    }
-    notice.addData(createdUser!);
+    notice.addData(createdUser);
     return notice;
   }
 }
