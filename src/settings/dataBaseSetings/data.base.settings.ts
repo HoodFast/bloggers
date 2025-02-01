@@ -3,7 +3,6 @@ import { EnvironmentVariable } from '../configurations';
 
 export class DataBaseSettings {
   constructor(private environmentVariables: EnvironmentVariable) {}
-  @IsOptional()
   @IsString()
   SQL_HOST: string = this.environmentVariables.SQL_HOST;
   @IsOptional()

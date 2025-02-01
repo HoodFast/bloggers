@@ -1,15 +1,16 @@
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration, {
+  ConfigServiceType,
+  validate,
+} from 'src/settings/configurations';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './features/auth/auth.module';
 import { BloggersModule } from './features/bloggers/bloggers.module';
 import { UsersModule } from './features/users/users.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration, {
-  ConfigServiceType,
-  validate,
-} from 'src/settings/configurations';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,7 +26,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         const sqlDataBaseSettings = configService.get('dataBaseSettings', {
           infer: true,
         });
-        console.log(sqlDataBaseSettings);
+
         return {
           type: 'postgres',
           host: sqlDataBaseSettings?.SQL_HOST,
@@ -42,9 +43,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         };
       },
     }),
+    AuthModule,
     BloggersModule,
     UsersModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

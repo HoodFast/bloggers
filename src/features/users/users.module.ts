@@ -4,11 +4,13 @@ import { UsersQueryRepo } from './infrastructure/users.query.repository';
 import { UsersRepo } from './infrastructure/users.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './domain/user.entity';
+import { CreateUserUseCase } from './api/useCase/create.user.usecase';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
-  providers: [UsersQueryRepo, UsersRepo],
+  providers: [UsersQueryRepo, UsersRepo, CreateUserUseCase],
   exports: [UsersQueryRepo],
 })
 export class UsersModule {}

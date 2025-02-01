@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { ValidateNested, validateSync } from 'class-validator';
 import { ApiSettings } from './apiSettings/api.settings';
 import { DataBaseSettings } from './dataBaseSetings/data.base.settings';
+import * as process from 'process';
 
 export type EnvironmentVariable = { [key: string]: string };
 
@@ -29,6 +30,7 @@ export class Configuration {
 
 export function validate(environmentVariables: Record<string, string>) {
   const config = Configuration.createConfig(environmentVariables);
+
   const errors = validateSync(config, { skipMissingProperties: false });
   if (errors.length > 0) throw new Error(errors.toString());
   return config;
