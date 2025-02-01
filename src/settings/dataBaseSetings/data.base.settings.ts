@@ -4,10 +4,15 @@ import { EnvironmentVariable } from '../configurations';
 export class DataBaseSettings {
   constructor(private environmentVariables: EnvironmentVariable) {}
   @IsOptional()
-  SQL_HOST = this.environmentVariables.SQL_HOST;
+  @IsString()
+  SQL_HOST: string = this.environmentVariables.SQL_HOST;
   @IsOptional()
   @IsString()
-  SQL_USERNAME: string | undefined = this.environmentVariables.SQL_USERNAME;
+  SQL_USERNAME: string = this.environmentVariables.SQL_USERNAME;
+  @IsOptional()
   @IsString()
-  SQL_PASS: string | undefined = this.environmentVariables.SQL_USERNAME;
+  SQL_PASS: string = this.environmentVariables.SQL_PASS;
+  @IsOptional()
+  @IsString()
+  SQL_DATABASE: string = this.environmentVariables.SQL_DATABASE;
 }

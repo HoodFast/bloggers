@@ -25,7 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         const sqlDataBaseSettings = configService.get('dataBaseSettings', {
           infer: true,
         });
-
+        console.log(sqlDataBaseSettings);
         return {
           type: 'postgres',
           host: sqlDataBaseSettings?.SQL_HOST,
@@ -47,6 +47,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ConfigService],
 })
 export class AppModule {}
