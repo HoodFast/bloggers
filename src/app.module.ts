@@ -10,9 +10,11 @@ import { AuthModule } from './features/auth/auth.module';
 import { BloggersModule } from './features/bloggers/bloggers.module';
 import { UsersModule } from './features/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -26,7 +28,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         const sqlDataBaseSettings = configService.get('dataBaseSettings', {
           infer: true,
         });
-
         return {
           type: 'postgres',
           host: sqlDataBaseSettings?.SQL_HOST,

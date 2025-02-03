@@ -9,7 +9,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class UsersController {
   constructor(protected commandBus: CommandBus) {}
   @HttpCode(201)
-  @UseGuards(AuthGuard('local;'))
+  @UseGuards(AuthGuard('local'))
   @Post()
   async createUser(@Body() data: createUserInput) {
     const command = new CreateUserCommand(

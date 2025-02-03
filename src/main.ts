@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { appSettings } from './settings/app.settings';
 import { ConfigurationType } from './settings/configurations';
 import { ConfigService } from '@nestjs/config';
 
+dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   appSettings(app);
@@ -13,6 +14,6 @@ async function bootstrap() {
   const apiSettings = configService.get('apiSettings', { infer: true });
   const port = apiSettings.PORT;
 
-  await app.listen(3000);
+  await app.listen(port);
 }
 bootstrap();

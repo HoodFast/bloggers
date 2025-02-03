@@ -31,21 +31,17 @@ export class CreateUserUseCase
     const checkUserExistLogin = await this.usersSqlRepository.checkExistLogin(
       command.login,
     );
-
     if (checkUserExistLogin) {
       notice.addError('user is already exist', 'error', 403);
       return notice;
     }
-
     const checkUserExistEmail = await this.usersSqlRepository.checkExistEmail(
       command.email,
     );
-
     if (checkUserExistEmail) {
       notice.addError('email is already exist', 'error', 403);
       return notice;
     }
-
     const createdAt = new Date();
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(command.password, salt);
@@ -55,13 +51,11 @@ export class CreateUserUseCase
       email: command.email,
       login: command.login,
     };
-
     const createdUser = await this.usersSqlRepository.createUser(createData);
     if (!createdUser) {
       notice.addError('error BD');
       return notice;
     }
-
     notice.addData(createdUser);
     return notice;
   }

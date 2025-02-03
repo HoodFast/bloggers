@@ -26,7 +26,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         errorsMessages: [],
       };
       const responceBody: any = exception.getResponse();
-
       if (typeof responceBody.message === 'string') {
         return response.status(status).send({
           errorsMessages: [
@@ -41,7 +40,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
           errorResponce.errorsMessages.push(m),
         );
       }
-
       response.status(status).json(errorResponce);
     } else {
       response.status(status).json({
