@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from '@nestjs/passport';
 import { MyJwtService } from './features/auth/infrastructure/my.jwt.service';
@@ -15,7 +15,7 @@ export class AppController {
     return this.appService.getHello();
   }
   @Get('token/:id')
-  async getToken(@Query('id') id: string) {
+  async getToken(@Param('id') id: string) {
     const token = await this.myJwtService.createPassportJWT(id);
     return token;
   }
