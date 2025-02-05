@@ -11,6 +11,9 @@ import { BloggersModule } from './features/bloggers/bloggers.module';
 import { UsersModule } from './features/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './features/auth/strategy/jwt.strategy';
+import { MyJwtService } from './features/auth/infrastructure/my.jwt.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -49,6 +52,6 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [AppService, ConfigService, JwtStrategy, MyJwtService, JwtService],
 })
 export class AppModule {}

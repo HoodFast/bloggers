@@ -3,6 +3,7 @@ import { ValidateNested, validateSync } from 'class-validator';
 import { ApiSettings } from './apiSettings/api.settings';
 import { DataBaseSettings } from './dataBaseSetings/data.base.settings';
 import * as process from 'process';
+import { JwtSettings } from './jwtSettings/jwt.settings';
 
 export type EnvironmentVariable = { [key: string]: string };
 
@@ -14,6 +15,8 @@ export class Configuration {
   apiSettings: ApiSettings;
   @ValidateNested()
   dataBaseSettings: DataBaseSettings;
+  @ValidateNested()
+  jwtSettings: JwtSettings;
 
   private constructor(configuration: Configuration) {
     Object.assign(this, configuration);
@@ -24,6 +27,7 @@ export class Configuration {
     return new this({
       apiSettings: new ApiSettings(environmentVariables),
       dataBaseSettings: new DataBaseSettings(environmentVariables),
+      jwtSettings: new JwtSettings(environmentVariables),
     });
   }
 }
