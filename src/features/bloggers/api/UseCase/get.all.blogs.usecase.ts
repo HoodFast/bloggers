@@ -19,6 +19,7 @@ export class GetAllBlogUseCase
     >
 {
   constructor(private blogQueryRepository: BlogsQueryRepository) {}
+  56;
 
   async execute(
     command: GetAllBlogsCommand,
