@@ -14,9 +14,11 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './features/auth/strategy/jwt.strategy';
 import { MyJwtService } from './features/auth/infrastructure/my.jwt.service';
 import { JwtService } from '@nestjs/jwt';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
   imports: [
+    CqrsModule,
     PassportModule,
     ConfigModule.forRoot({
       isGlobal: true,

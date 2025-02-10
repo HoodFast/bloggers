@@ -6,7 +6,7 @@ export class User {
   id: string;
   @Column()
   _passwordHash: string;
-  @Column({ length: 10, collation: 'C' })
+  @Column({ length: 10 })
   login: string;
   @Column()
   email: string;

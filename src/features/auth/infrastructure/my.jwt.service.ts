@@ -28,13 +28,18 @@ export class MyJwtService {
     );
   }
 
-  async createPassportRefreshJWT(userId: string): Promise<string | null> {
-    return this.jwtService.sign(
-      { userId },
+  async createPassportRefreshJWT(
+    userId: string,
+    deviceId: string,
+  ): Promise<{ token: string; iat: number; exp: number } | null> {
+    const token = this.jwtService.sign(
+      { userId, deviceId },
       {
         secret: this.RT_SECRET,
         expiresIn: this.RT_TIME,
       },
     );
+    const decoded = await this.jwtService.decode(token);
+    return { token, iat: decoded.iat, exp: decoded.exp };
   }
 }

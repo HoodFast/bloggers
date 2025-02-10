@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersQueryRepo } from '../users/infrastructure/users.query.repository';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { outputUserMapper } from '../users/infrastructure/mappers/output.user.mapper';
 @Injectable()
 export class AuthService {
   constructor(private usersQueryRepo: UsersQueryRepo) {}
@@ -11,8 +12,9 @@ export class AuthService {
       return null;
     }
     const res = await bcrypt.compare(password, user._passwordHash);
+
     if (res) {
-      return user;
+      return outputUserMapper(user);
     }
     return null;
   }
