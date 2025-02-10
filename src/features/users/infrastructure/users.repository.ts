@@ -31,4 +31,15 @@ export class UsersRepo {
     const user = await this.usersRepository.findOne({ where: { email } });
     return !!user;
   }
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) return null;
+    return user;
+  }
+  async addRecoveryCode(id: string, recoveryCode: string) {
+    const updateCode = await this.usersRepository.update(id, {
+      recoveryCode: recoveryCode,
+    });
+    return updateCode.affected > 0;
+  }
 }
