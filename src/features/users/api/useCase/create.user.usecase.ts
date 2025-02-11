@@ -1,10 +1,10 @@
 import { OutputUsersType } from '../output/user.output';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InterlayerNotice } from '../../../../base/models/inter.layer';
-import { UsersRepo } from '../../infrastructure/users.repository';
+import { UsersRepository } from '../../infrastructure/users.repository';
 import { UsersQueryRepo } from '../../infrastructure/users.query.repository';
 import { CreateUserType } from '../../infrastructure/types/create.user.type';
-import * as bcrypt from 'bcrypt';
+
 export class CreateUserCommand {
   constructor(
     public login: string,
@@ -20,7 +20,7 @@ export class CreateUserUseCase
     ICommandHandler<CreateUserCommand, InterlayerNotice<OutputUsersType>>
 {
   constructor(
-    private usersSqlRepository: UsersRepo,
+    private usersSqlRepository: UsersRepository,
     private usersSqlQueryRepository: UsersQueryRepo,
   ) {}
 
@@ -43,10 +43,8 @@ export class CreateUserUseCase
       return notice;
     }
     const createdAt = new Date();
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(command.password, salt);
     const createData: CreateUserType = {
-      _passwordHash: hash,
+      password: command.password,
       createdAt,
       email: command.email,
       login: command.login,

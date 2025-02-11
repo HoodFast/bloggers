@@ -5,7 +5,7 @@ import {
 } from '../../../../base/models/inter.layer';
 
 import { EmailService } from '../../infrastructure/email.service';
-import { UsersRepo } from '../../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../../users/infrastructure/users.repository';
 
 export class RecoveryPasswordCommand {
   constructor(public email: string) {}
@@ -17,7 +17,7 @@ export class RecoveryUseCase
 {
   constructor(
     private emailService: EmailService,
-    protected usersRepository: UsersRepo,
+    protected usersRepository: UsersRepository,
   ) {}
 
   async execute(

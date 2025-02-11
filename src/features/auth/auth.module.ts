@@ -14,6 +14,7 @@ import { SessionRepository } from './sessions/infrastructure/session.repository'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Session } from './sessions/domain/session.entity';
 import { RecoveryUseCase } from './api/useCase/recovery.password.usecase';
+import { ChangePasswordUseCase } from './api/useCase/change.password.usecase';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RecoveryUseCase } from './api/useCase/recovery.password.usecase';
   ],
   controllers: [AuthController],
   providers: [
+    ChangePasswordUseCase,
     RecoveryUseCase,
     SessionQueryRepository,
     SessionRepository,

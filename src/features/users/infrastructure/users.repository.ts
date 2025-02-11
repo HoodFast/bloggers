@@ -4,16 +4,21 @@ import { User } from '../domain/user.entity';
 import { Repository } from 'typeorm';
 import { OutputUsersType } from '../api/output/user.output';
 import { outputUserMapper } from './mappers/output.user.mapper';
+import { MyJwtService } from '../../auth/infrastructure/my.jwt.service';
+import * as bcrypt from 'bcrypt';
 
-export class UsersRepo {
+export class UsersRepository {
   constructor(
     @InjectRepository(User) protected usersRepository: Repository<User>,
+    protected myJwtService: MyJwtService,
   ) {}
   async createUser(data: CreateUserType): Promise<OutputUsersType | null> {
     try {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(data.password, salt);
       const user = new User();
       user.createdAt = data.createdAt;
-      user._passwordHash = data._passwordHash;
+      user._passwordHash = hash;
       user.email = data.email;
       user.login = data.login;
       const save = await this.usersRepository.save<User>(user);
@@ -41,5 +46,20 @@ export class UsersRepo {
       recoveryCode: recoveryCode,
     });
     return updateCode.affected > 0;
+  }
+  async getUserByRecoveryCode(code: string): Promise<User | null> {
+    const user = await this.usersRepository.findOne({
+      where: { recoveryCode: code },
+    });
+    if (!user) return null;
+    return user;
+  }
+  async changePassword(id: string, newPassword: string) {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(newPassword, salt);
+    const update = await this.usersRepository.update(id, {
+      _passwordHash: hash,
+    });
+    return update.affected > 0;
   }
 }

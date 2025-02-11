@@ -1,5 +1,5 @@
 export class CreateUserType {
-  _passwordHash: string;
+  password: string;
   login: string;
   email: string;
   createdAt: Date;

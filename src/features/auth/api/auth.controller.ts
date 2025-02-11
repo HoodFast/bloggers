@@ -2,6 +2,8 @@ import { CommandBus } from '@nestjs/cqrs';
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpStatus,
   Ip,
   Post,
   Req,
@@ -14,6 +16,8 @@ import { InterlayerNotice } from '../../../base/models/inter.layer';
 import { LoginOutput } from '../../users/api/output/login.output';
 import { Response } from 'express';
 import { RecoveryPasswordCommand } from './useCase/recovery.password.usecase';
+import { InputChangePasswordType } from './input/input.change.password';
+import { ChangePasswordCommand } from './useCase/change.password.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +52,19 @@ export class AuthController {
     const command = new RecoveryPasswordCommand(email);
     const res = await this.commandBus.execute<
       RecoveryPasswordCommand,
+      InterlayerNotice<boolean>
+    >(command);
+    return res.execute();
+  }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('new-password')
+  async newPassword(@Body() data: InputChangePasswordType) {
+    const command = new ChangePasswordCommand(
+      data.newPassword,
+      data.recoveryCode,
+    );
+    const res = await this.commandBus.execute<
+      ChangePasswordCommand,
       InterlayerNotice<boolean>
     >(command);
     return res.execute();
