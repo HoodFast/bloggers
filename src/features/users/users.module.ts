@@ -6,11 +6,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './domain/user.entity';
 import { CreateUserUseCase } from './api/useCase/create.user.usecase';
 import { CqrsModule } from '@nestjs/cqrs';
+import { MyJwtService } from '../auth/infrastructure/my.jwt.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
-  providers: [UsersQueryRepo, UsersRepository, CreateUserUseCase],
-  exports: [UsersQueryRepo],
+  providers: [
+    UsersQueryRepo,
+    UsersRepository,
+    CreateUserUseCase,
+    MyJwtService,
+    JwtService,
+  ],
+  exports: [UsersQueryRepo, UsersRepository],
 })
 export class UsersModule {}

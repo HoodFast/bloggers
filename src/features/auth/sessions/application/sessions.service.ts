@@ -40,4 +40,11 @@ export class SessionsService {
     if (!session) return null;
     return refreshToken.token;
   }
+  async getSession(token: string) {
+    const { userId, title } = await this.myJwtService.getTokenData(token);
+    return await this.sessionQueryRepository.getSessionByUserAndTitle(
+      userId,
+      title,
+    );
+  }
 }

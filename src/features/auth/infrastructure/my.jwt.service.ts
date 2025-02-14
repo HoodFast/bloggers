@@ -42,4 +42,15 @@ export class MyJwtService {
     const decoded = await this.jwtService.decode(token);
     return { token, iat: decoded.iat, exp: decoded.exp };
   }
+  async getTokenData(
+    token: string,
+  ): Promise<{ userId: string; title: string } | null> {
+    try {
+      const decoded = await this.jwtService.decode(token);
+      return { userId: decoded.userId, title: decoded.title };
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
 }

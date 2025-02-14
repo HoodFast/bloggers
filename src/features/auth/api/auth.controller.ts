@@ -18,6 +18,7 @@ import { Response } from 'express';
 import { RecoveryPasswordCommand } from './useCase/recovery.password.usecase';
 import { InputChangePasswordType } from './input/input.change.password';
 import { ChangePasswordCommand } from './useCase/change.password.usecase';
+import { GenerateRefreshTokensPairCommand } from './useCase/generate.refresh.tokens.pair.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -56,6 +57,7 @@ export class AuthController {
     >(command);
     return res.execute();
   }
+
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async newPassword(@Body() data: InputChangePasswordType) {
@@ -68,5 +70,24 @@ export class AuthController {
       InterlayerNotice<boolean>
     >(command);
     return res.execute();
+  }
+
+  @Post('refresh-token')
+  async refreshToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    // @ts-ignore
+    const token = req.cookies.refreshToken;
+    const command = new GenerateRefreshTokensPairCommand(token);
+    const result = await this.commandBus.execute<
+      GenerateRefreshTokensPairCommand,
+      InterlayerNotice<LoginOutput>
+    >(command);
+    res.cookie('refreshToken', result.data.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    return { accessToken: result.data.accessToken };
   }
 }
