@@ -16,6 +16,7 @@ import { Session } from './sessions/domain/session.entity';
 import { RecoveryUseCase } from './api/useCase/recovery.password.usecase';
 import { ChangePasswordUseCase } from './api/useCase/change.password.usecase';
 import { EmailService } from './infrastructure/email.service';
+import { RegistrationMailUseCase } from './api/useCase/registration.mail.usecase';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { EmailService } from './infrastructure/email.service';
   controllers: [AuthController],
   providers: [
     EmailService,
+    RegistrationMailUseCase,
     ChangePasswordUseCase,
     RecoveryUseCase,
     SessionQueryRepository,

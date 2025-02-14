@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { EmailConfirmation } from './emailConfirmation';
 
 @Entity()
 export class User {
@@ -14,4 +15,6 @@ export class User {
   createdAt: Date;
   @Column({ nullable: true })
   recoveryCode: string;
+  @OneToOne(() => EmailConfirmation)
+  emailConfirmation: EmailConfirmation;
 }

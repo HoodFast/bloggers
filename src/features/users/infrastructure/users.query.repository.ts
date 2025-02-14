@@ -16,4 +16,12 @@ export class UsersQueryRepo {
     });
     return user;
   }
+  async getUserByConfirmCode(code: string) {
+    const res = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
+      .where('emailConfirmation.confirmationCode = :code', { code })
+      .getOne();
+    return res;
+  }
 }

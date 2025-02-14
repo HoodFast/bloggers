@@ -8,9 +8,10 @@ import { CreateUserUseCase } from './api/useCase/create.user.usecase';
 import { CqrsModule } from '@nestjs/cqrs';
 import { MyJwtService } from '../auth/infrastructure/my.jwt.service';
 import { JwtService } from '@nestjs/jwt';
+import { EmailConfirmation } from './domain/emailConfirmation';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([User])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([User, EmailConfirmation])],
   controllers: [UsersController],
   providers: [
     UsersQueryRepo,

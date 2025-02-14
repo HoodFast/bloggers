@@ -14,11 +14,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginCommand } from './useCase/login.usecase';
 import { InterlayerNotice } from '../../../base/models/inter.layer';
 import { LoginOutput } from '../../users/api/output/login.output';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { RecoveryPasswordCommand } from './useCase/recovery.password.usecase';
 import { InputChangePasswordType } from './input/input.change.password';
 import { ChangePasswordCommand } from './useCase/change.password.usecase';
 import { GenerateRefreshTokensPairCommand } from './useCase/generate.refresh.tokens.pair.usecase';
+import { RegistrationMailCommand } from './useCase/registration.mail.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -77,7 +78,6 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    // @ts-ignore
     const token = req.cookies.refreshToken;
     const command = new GenerateRefreshTokensPairCommand(token);
     const result = await this.commandBus.execute<
@@ -89,5 +89,14 @@ export class AuthController {
       secure: true,
     });
     return { accessToken: result.data.accessToken };
+  }
+  @Post('registration-confirmation')
+  async registrationMail(@Body() code: string) {
+    const command = new RegistrationMailCommand(code);
+    const res = await this.commandBus.execute<
+      RegistrationMailCommand,
+      InterlayerNotice<boolean>
+    >(command);
+    return res.execute();
   }
 }

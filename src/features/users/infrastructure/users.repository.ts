@@ -62,4 +62,18 @@ export class UsersRepository {
     });
     return update.affected > 0;
   }
+  async confirmMail(userId: string) {
+    try {
+      const result = await this.usersRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
+        .where('user.id = :userId', { userId })
+        .update('emailConfirmation', { isConfirmed: true })
+        .execute();
+      return !!result.affected;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
 }
