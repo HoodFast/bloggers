@@ -20,6 +20,8 @@ import { InputChangePasswordType } from './input/input.change.password';
 import { ChangePasswordCommand } from './useCase/change.password.usecase';
 import { GenerateRefreshTokensPairCommand } from './useCase/generate.refresh.tokens.pair.usecase';
 import { RegistrationMailCommand } from './useCase/registration.mail.usecase';
+import { InputRegistrationUser } from './input/input.registration.user';
+import { RegistrationCommand } from './useCase/registration.user.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -95,6 +97,15 @@ export class AuthController {
     const command = new RegistrationMailCommand(code);
     const res = await this.commandBus.execute<
       RegistrationMailCommand,
+      InterlayerNotice<boolean>
+    >(command);
+    return res.execute();
+  }
+  @Post('registration')
+  async registrationUser(@Body() data: InputRegistrationUser) {
+    const command = new RegistrationCommand(data);
+    const res = await this.commandBus.execute<
+      RegistrationCommand,
       InterlayerNotice<boolean>
     >(command);
     return res.execute();

@@ -17,6 +17,7 @@ import { RecoveryUseCase } from './api/useCase/recovery.password.usecase';
 import { ChangePasswordUseCase } from './api/useCase/change.password.usecase';
 import { EmailService } from './infrastructure/email.service';
 import { RegistrationMailUseCase } from './api/useCase/registration.mail.usecase';
+import { RegistrationUseCase } from './api/useCase/registration.user.usecase';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RegistrationMailUseCase } from './api/useCase/registration.mail.usecase
   ],
   controllers: [AuthController],
   providers: [
+    RegistrationUseCase,
     EmailService,
     RegistrationMailUseCase,
     ChangePasswordUseCase,
