@@ -110,4 +110,11 @@ export class AuthController {
     >(command);
     return res.execute();
   }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
+  async logout(@Req() req: Request) {
+    const userId = req.user;
+    debugger;
+    return true;
+  }
 }
