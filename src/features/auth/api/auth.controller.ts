@@ -22,6 +22,7 @@ import { GenerateRefreshTokensPairCommand } from './useCase/generate.refresh.tok
 import { RegistrationMailCommand } from './useCase/registration.mail.usecase';
 import { InputRegistrationUser } from './input/input.registration.user';
 import { RegistrationCommand } from './useCase/registration.user.usecase';
+import { LogoutCommand } from './useCase/logout.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -113,8 +114,13 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   async logout(@Req() req: Request) {
-    const userId = req.user;
-    debugger;
-    return true;
+    const userId = req.user as string;
+    const title = req.get('User-Agent') || 'none title';
+    const command = new LogoutCommand(userId, title);
+    const res = await this.commandBus.execute<
+      LogoutCommand,
+      InterlayerNotice<boolean>
+    >(command);
+    res.execute();
   }
 }

@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Session } from '../domain/session.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateSessionType } from '../application/types/create.session.type';
 import { Injectable } from '@nestjs/common';
 @Injectable()
@@ -23,5 +23,12 @@ export class SessionRepository {
   async deleteSession(id: string): Promise<boolean> {
     const res = await this.sessionRepository.delete(id);
     return res.affected > 0;
+  }
+  async deleteAllSessionsExceptCurrent(userId: string, sessionId: string) {
+    const deleteSessions = await this.sessionRepository.delete({
+      userId: userId,
+      id: Not(sessionId),
+    });
+    return deleteSessions.affected > 0;
   }
 }

@@ -28,7 +28,7 @@ export class GenerateRefreshTokensPairUseCase
     command: GenerateRefreshTokensPairCommand,
   ): Promise<InterlayerNotice<LoginOutput>> {
     const notice = new InterlayerNotice<LoginOutput>();
-    const session = await this.sessionService.getSession(command.token);
+    const session = await this.sessionService.getCurrentSession(command.token);
     const accessToken = await this.myJwtService.createPassportJWT(
       session.userId,
     );
