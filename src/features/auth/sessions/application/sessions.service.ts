@@ -15,7 +15,6 @@ export class SessionsService {
     title: string,
     ip: string,
   ) {
-    debugger;
     const oldSession =
       await this.sessionQueryRepository.getSessionByUserAndTitle(userId, title);
     const deviceId = oldSession?.deviceId || crypto.randomUUID();
@@ -24,6 +23,7 @@ export class SessionsService {
       deviceId,
     );
     const iat = new Date(refreshToken.iat * 1000);
+    debugger;
     const expireDate = new Date(refreshToken.exp * 1000);
     const sessionMetaData: CreateSessionType = {
       userId,

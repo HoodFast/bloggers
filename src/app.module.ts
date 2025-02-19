@@ -15,11 +15,14 @@ import { JwtStrategy } from './features/auth/strategy/jwt.strategy';
 import { MyJwtService } from './features/auth/infrastructure/my.jwt.service';
 import { JwtService } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
+import { SessionQueryRepository } from './features/auth/sessions/infrastructure/session.query.repository';
+import { Session } from './features/auth/sessions/domain/session.entity';
 
 @Module({
   imports: [
     CqrsModule,
     PassportModule,
+
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -49,11 +52,19 @@ import { CqrsModule } from '@nestjs/cqrs';
         };
       },
     }),
+    TypeOrmModule.forFeature([Session]),
     AuthModule,
     BloggersModule,
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService, JwtStrategy, MyJwtService, JwtService],
+  providers: [
+    AppService,
+    ConfigService,
+    JwtStrategy,
+    MyJwtService,
+    JwtService,
+    SessionQueryRepository,
+  ],
 })
 export class AppModule {}

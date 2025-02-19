@@ -21,14 +21,10 @@ import { RegistrationUseCase } from './api/useCase/registration.user.usecase';
 import { LogoutUseCase } from './api/useCase/logout.usecase';
 
 @Module({
-  imports: [
-    PassportModule,
-    UsersModule,
-    CqrsModule,
-    TypeOrmModule.forFeature([Session]),
-  ],
+  imports: [UsersModule, CqrsModule, TypeOrmModule.forFeature([Session])],
   controllers: [AuthController],
   providers: [
+    SessionQueryRepository,
     LogoutUseCase,
     RegistrationUseCase,
     EmailService,

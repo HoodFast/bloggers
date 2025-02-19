@@ -18,4 +18,10 @@ export class SessionQueryRepository {
     if (!session) return null;
     return session;
   }
+  async getSessionByUserIdAndIat(userId: string, iat: string) {
+    const session = await this.sessionRepository.findOne({
+      where: { userId, iat: new Date(iat) },
+    });
+    return session;
+  }
 }
