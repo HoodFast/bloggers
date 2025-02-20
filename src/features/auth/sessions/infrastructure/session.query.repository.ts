@@ -20,7 +20,7 @@ export class SessionQueryRepository {
   }
   async getSessionByUserIdAndIat(userId: string, iat: string) {
     const session = await this.sessionRepository.findOne({
-      where: { userId, iat: new Date(iat) },
+      where: { userId, iat: new Date(+iat * 1000) },
     });
     return session;
   }
