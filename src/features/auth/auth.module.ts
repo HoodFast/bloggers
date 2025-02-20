@@ -31,13 +31,11 @@ import { LogoutUseCase } from './api/useCase/logout.usecase';
     RegistrationMailUseCase,
     ChangePasswordUseCase,
     RecoveryUseCase,
-    SessionQueryRepository,
     SessionRepository,
     LoginUseCase,
     AuthService,
     SessionsService,
     LocalStrategy,
-    MyJwtService,
     JwtService,
   ],
 })

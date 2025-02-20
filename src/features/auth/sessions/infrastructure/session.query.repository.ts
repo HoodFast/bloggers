@@ -14,7 +14,7 @@ export class SessionQueryRepository {
     const session = await this.sessionRepository.findOne({
       where: { userId, title },
     });
-    debugger;
+
     if (!session) return null;
     return session;
   }

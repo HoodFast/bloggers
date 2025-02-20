@@ -62,7 +62,6 @@ import { Session } from './features/auth/sessions/domain/session.entity';
     AppService,
     ConfigService,
     JwtStrategy,
-    MyJwtService,
     JwtService,
     SessionQueryRepository,
   ],

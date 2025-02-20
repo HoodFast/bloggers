@@ -114,9 +114,9 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   async logout(@Req() req: Request) {
-    const userId = req.user as string;
-    const title = req.get('User-Agent') || 'none title';
-    const command = new LogoutCommand(userId, title);
+    const token = req.cookies.refreshToken;
+
+    const command = new LogoutCommand(token);
     const res = await this.commandBus.execute<
       LogoutCommand,
       InterlayerNotice<boolean>

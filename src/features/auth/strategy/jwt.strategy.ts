@@ -24,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       payload.userId,
       payload.iat,
     );
-    debugger;
+
     return payload.userId;
   }
 }

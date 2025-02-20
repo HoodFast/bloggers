@@ -29,14 +29,14 @@ export class GenerateRefreshTokensPairUseCase
   ): Promise<InterlayerNotice<LoginOutput>> {
     const notice = new InterlayerNotice<LoginOutput>();
     const session = await this.sessionService.getCurrentSession(command.token);
-    const accessToken = await this.myJwtService.createPassportJWT(
-      session.userId,
-    );
-
-    const refreshToken = await this.sessionService.createSessionAndRefreshToken(
+    const accessToken = await this.myJwtService.createAccessToken(
       session.userId,
       session.title,
       session.ip,
+    );
+
+    const refreshToken = await this.myJwtService.createPassportJWT(
+      session.userId,
     );
     if (!refreshToken || !accessToken) {
       notice.addError('error BD', 'error', ERRORS_CODE.ERROR);
