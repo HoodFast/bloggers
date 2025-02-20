@@ -14,9 +14,4 @@ export class AppController {
   async getHello(): Promise<string> {
     return this.appService.getHello();
   }
-  @Get('token/:id')
-  async getToken(@Param('id') id: string) {
-    const token = await this.myJwtService.createPassportJWT(id);
-    return token;
-  }
 }

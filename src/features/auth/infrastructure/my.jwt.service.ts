@@ -27,8 +27,8 @@ export class MyJwtService {
     return this.jwtService.sign(
       { userId },
       {
-        secret: this.AC_SECRET,
-        expiresIn: this.AC_TIME,
+        secret: this.RT_SECRET,
+        expiresIn: this.RT_TIME,
       },
     );
   }
@@ -36,7 +36,7 @@ export class MyJwtService {
     const oldSession =
       await this.sessionQueryRepository.getSessionByUserAndTitle(userId, title);
     const deviceId = oldSession?.deviceId || crypto.randomUUID();
-    const accessToken = await this.createJWTAndDecode(userId, deviceId);
+    const accessToken = await this.createAccessJWTAndDecode(userId, deviceId);
 
     const iat = new Date(accessToken.iat * 1000);
 
@@ -56,15 +56,15 @@ export class MyJwtService {
     if (!session) return null;
     return accessToken.token;
   }
-  async createJWTAndDecode(
+  async createAccessJWTAndDecode(
     userId: string,
     deviceId: string,
   ): Promise<{ token: string; iat: number; exp: number } | null> {
     const token = this.jwtService.sign(
       { userId, deviceId },
       {
-        secret: this.RT_SECRET,
-        expiresIn: this.RT_TIME,
+        secret: this.AC_SECRET,
+        expiresIn: this.AC_TIME,
       },
     );
     const decoded = await this.jwtService.decode(token);
@@ -75,7 +75,6 @@ export class MyJwtService {
   ): Promise<{ userId: string; title: string } | null> {
     try {
       const decoded = await this.jwtService.decode(token);
-      debugger;
       return { userId: decoded.userId, title: decoded.title };
     } catch (e) {
       console.log(e);
