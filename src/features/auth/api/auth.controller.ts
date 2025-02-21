@@ -23,7 +23,8 @@ import { RegistrationMailCommand } from './useCase/registration.mail.usecase';
 import { InputRegistrationUser } from './input/input.registration.user';
 import { RegistrationCommand } from './useCase/registration.user.usecase';
 import { LogoutCommand } from './useCase/logout.usecase';
-
+import { ThrottlerGuard } from '@nestjs/throttler';
+@UseGuards(ThrottlerGuard)
 @Controller('auth')
 export class AuthController {
   constructor(protected commandBus: CommandBus) {}

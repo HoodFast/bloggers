@@ -12,12 +12,10 @@ import { UsersModule } from './features/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './features/auth/strategy/jwt.strategy';
-import { MyJwtService } from './features/auth/infrastructure/my.jwt.service';
 import { JwtService } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SessionQueryRepository } from './features/auth/sessions/infrastructure/session.query.repository';
 import { Session } from './features/auth/sessions/domain/session.entity';
-
 @Module({
   imports: [
     CqrsModule,
