@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
-export class Blogs extends BaseEntity {
+export class Blog extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
