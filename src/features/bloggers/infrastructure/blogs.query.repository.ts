@@ -10,17 +10,29 @@ export class BlogsQueryRepository {
   constructor(
     @InjectRepository(Blog) private blogsRepository: Repository<Blog>,
   ) {}
-  async getAllBlogs(data: GetBlogInput): Promise<Pagination<BlogViewModel>> {
-    console.log(data);
-    const res: any = await this.blogsRepository
-      .createQueryBuilder('blogs')
-      .limit();
+  async getAllBlogs(data: GetBlogInput): Promise<Pagination<BlogViewModel[]>> {
+    const { sortBy, sortDirection, searchNameTerm, pageSize, pageNumber } =
+      data;
+    const offset = (pageNumber - 1) * pageSize;
+
+    const res = await this.blogsRepository
+      .createQueryBuilder('blog')
+      .where('blog.name ILIKE :searchLoginTerm ', {
+        searchLoginTerm: `%${searchNameTerm}%`,
+      })
+      .orderBy(`blog.${sortBy}`, sortDirection)
+      .skip(offset)
+      .take(pageSize)
+      .leftJoinAndSelect('blog.owner', 'owner')
+      .getManyAndCount();
+
+    const pagesCount = Math.ceil(res[1] / pageSize);
     return {
-      pagesCount: 0,
+      pagesCount,
       page: data.pageNumber,
       pageSize: data.pageSize,
       totalCount: 0,
-      items: res.items.map(blogsViewMapper),
+      items: res[0].map(blogsViewMapper),
     };
   }
 }
