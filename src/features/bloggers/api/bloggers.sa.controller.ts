@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Query,
   UseGuards,
@@ -19,34 +18,31 @@ import { BlogViewModelSA } from './output/blog.view.model.SA';
 import { createBlogInput } from './input/create.blog.input.type';
 import { CreateBlogCommand } from './UseCase/create.blog.usecase';
 import { BlogViewModel } from './output/blog.view.model';
-import { GetBlogCommand } from './UseCase/get.blog.usecase';
 @UseGuards(AuthGuard)
-@Controller('blogs')
+@Controller('sa/blogs')
 export class BloggersSaController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
-
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  async createBlog(@Body() data: createBlogInput) {
+    const res = await this.commandBus.execute<
+      CreateBlogCommand,
+      InterlayerNotice<BlogViewModel>
+    >(new CreateBlogCommand(data));
+    return res.execute();
+  }
   @Get()
   async getAllBlogs(@Query() data: GetBlogInput) {
-    const command = new GetAllBlogsCommand(data, false);
+    const command = new GetAllBlogsCommand(data, true);
     const res = await this.queryBus.execute<
       GetAllBlogsCommand,
-      InterlayerNotice<Pagination<BlogViewModel[]>>
+      InterlayerNotice<Pagination<BlogViewModelSA[]>>
     >(command);
     return res.execute();
   }
-  @Get(':id')
-  async getBlogById(@Param('id') id: string) {
-    const res = await this.queryBus.execute<
-      GetBlogCommand,
-      InterlayerNotice<BlogViewModel>
-    >(new GetBlogCommand(id));
-    return res.execute();
-  }
-  @Get(':id/posts')
-  async getAllPostsByBlog(@Param('id') id: string) {
-    return;
-  }
+
+  async bindBlogWithUser() {}
 }

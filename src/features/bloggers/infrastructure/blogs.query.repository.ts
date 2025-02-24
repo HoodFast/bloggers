@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Blog } from '../domain/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BlogsViewMapper, SAblogsViewMapper } from './mappers/blogViewMapper';
+import { BlogViewModel } from '../api/output/blog.view.model';
 
 export class BlogsQueryRepository {
   constructor(
@@ -12,7 +13,8 @@ export class BlogsQueryRepository {
   ) {}
   async getAllBlogsForSA(
     data: GetBlogInput,
-  ): Promise<Pagination<BlogViewModelSA[]>> {
+    controlSA: boolean,
+  ): Promise<Pagination<BlogViewModelSA[] | BlogViewModel[]>> {
     const { sortBy, sortDirection, searchNameTerm, pageSize, pageNumber } =
       data;
     const offset = (pageNumber - 1) * pageSize;
@@ -29,12 +31,15 @@ export class BlogsQueryRepository {
       .getManyAndCount();
 
     const pagesCount = Math.ceil(res[1] / pageSize);
+    const items = controlSA
+      ? res[0].map(SAblogsViewMapper)
+      : res[0].map(BlogsViewMapper);
     return {
       pagesCount,
       page: data.pageNumber,
       pageSize: data.pageSize,
       totalCount: 0,
-      items: res[0].map(SAblogsViewMapper),
+      items: items,
     };
   }
   async getBlog(id: string) {
