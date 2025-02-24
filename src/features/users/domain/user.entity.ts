@@ -1,5 +1,12 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { EmailConfirmation } from './emailConfirmation';
+import { Blog } from '../../bloggers/domain/blog.entity';
 
 @Entity()
 export class User {
@@ -17,4 +24,6 @@ export class User {
   recoveryCode: string;
   @OneToOne(() => EmailConfirmation)
   emailConfirmation: EmailConfirmation;
+  @OneToMany(() => Blog, (blog) => blog.owner, { onDelete: 'CASCADE' })
+  blog: Blog[];
 }

@@ -4,7 +4,7 @@ import { BlogViewModel } from '../api/output/blog.view.model';
 import { Repository } from 'typeorm';
 import { Blog } from '../domain/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { blogsViewMapper } from './mappers/blogViewMApper';
+import { blogsViewMapper } from './mappers/blogViewMapper';
 
 export class BlogsQueryRepository {
   constructor(
