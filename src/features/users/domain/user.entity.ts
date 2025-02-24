@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { EmailConfirmation } from './emailConfirmation';
 import { Blog } from '../../bloggers/domain/blog.entity';
+import { PostLikes } from '../../posts/domain/post.entity';
 
 @Entity()
 export class User {
@@ -26,4 +27,6 @@ export class User {
   emailConfirmation: EmailConfirmation;
   @OneToMany(() => Blog, (blog) => blog.owner, { onDelete: 'CASCADE' })
   blog: Blog[];
+  @OneToMany(() => PostLikes, (postLikes) => postLikes.user)
+  postLikes: PostLikes[];
 }

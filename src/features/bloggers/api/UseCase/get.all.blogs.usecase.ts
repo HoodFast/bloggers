@@ -15,15 +15,15 @@ export class GetAllBlogUseCase
   implements
     IQueryHandler<
       GetAllBlogsCommand,
-      InterlayerNotice<Pagination<BlogViewModel>>
+      InterlayerNotice<Pagination<BlogViewModel[]>>
     >
 {
   constructor(private blogQueryRepository: BlogsQueryRepository) {}
 
   async execute(
     command: GetAllBlogsCommand,
-  ): Promise<InterlayerNotice<Pagination<BlogViewModel>>> {
-    const notice = new InterlayerNotice<Pagination<BlogViewModel>>();
+  ): Promise<InterlayerNotice<Pagination<BlogViewModel[]>>> {
+    const notice = new InterlayerNotice<Pagination<BlogViewModel[]>>();
     const sortData: GetBlogInput = {
       searchNameTerm: command.sortData.searchNameTerm ?? '',
       sortBy: command.sortData.sortBy ?? 'createdAt',
