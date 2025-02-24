@@ -3,7 +3,7 @@ import { InterlayerNotice } from '../../../../base/models/inter.layer';
 import { GetBlogInput } from '../input/get.all.blog.input.type';
 import { SortDirection } from '../../../../base/enum/sortBy.enum';
 import { Pagination } from '../../../../base/types/pagination';
-import { BlogViewModel } from '../output/blog.view.model';
+import { BlogViewModelSA } from '../output/blog.view.model.SA';
 import { BlogsQueryRepository } from '../../infrastructure/blogs.query.repository';
 
 export class GetAllBlogsCommand {
@@ -15,15 +15,15 @@ export class GetAllBlogUseCase
   implements
     IQueryHandler<
       GetAllBlogsCommand,
-      InterlayerNotice<Pagination<BlogViewModel[]>>
+      InterlayerNotice<Pagination<BlogViewModelSA[]>>
     >
 {
   constructor(private blogQueryRepository: BlogsQueryRepository) {}
 
   async execute(
     command: GetAllBlogsCommand,
-  ): Promise<InterlayerNotice<Pagination<BlogViewModel[]>>> {
-    const notice = new InterlayerNotice<Pagination<BlogViewModel[]>>();
+  ): Promise<InterlayerNotice<Pagination<BlogViewModelSA[]>>> {
+    const notice = new InterlayerNotice<Pagination<BlogViewModelSA[]>>();
     const sortData: GetBlogInput = {
       searchNameTerm: command.sortData.searchNameTerm ?? '',
       sortBy: command.sortData.sortBy ?? 'createdAt',
@@ -33,7 +33,7 @@ export class GetAllBlogUseCase
         : 1,
       pageSize: command.sortData.pageSize ? +command.sortData.pageSize : 10,
     };
-    const result = await this.blogQueryRepository.getAllBlogs(sortData);
+    const result = await this.blogQueryRepository.getAllBlogsForSA(sortData);
 
     if (!result) {
       notice.addError('blogs not found', 'error', 404);
