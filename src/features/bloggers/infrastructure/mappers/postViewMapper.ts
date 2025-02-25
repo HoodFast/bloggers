@@ -1,5 +1,3 @@
-import { Blog } from '../../domain/blog.entity';
-import { BlogViewModel } from '../../api/output/blog.view.model';
 import { Post } from '../../../posts/domain/post.entity';
 import { GetAllPostForOutput } from '../../api/output/get.all.post.output.type';
 

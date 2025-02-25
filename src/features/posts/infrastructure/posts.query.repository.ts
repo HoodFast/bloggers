@@ -4,6 +4,7 @@ import { Post } from '../domain/post.entity';
 import { GetPostForBlogInput } from '../../bloggers/api/input/get.all.posts.for.blog.input.type';
 import { GetAllPostForOutput } from '../../bloggers/api/output/get.all.post.output.type';
 import { Pagination } from '../../../base/types/pagination';
+import { PostsViewMapper } from '../../bloggers/infrastructure/mappers/postViewMapper';
 
 export class PostsQueryRepository {
   constructor(
@@ -30,7 +31,7 @@ export class PostsQueryRepository {
         page: pageNumber,
         pageSize,
         totalCount: res.length,
-        items: res,
+        items: res.map(PostsViewMapper),
       };
     } catch (e) {
       console.log(e);

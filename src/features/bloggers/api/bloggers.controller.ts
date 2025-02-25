@@ -1,30 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetBlogInput } from './input/get.all.blog.input.type';
 import { GetAllBlogsCommand } from './UseCase/get.all.blogs.usecase';
 import { InterlayerNotice } from '../../../base/models/inter.layer';
 import { Pagination } from '../../../base/types/pagination';
-import { BlogViewModelSA } from './output/blog.view.model.SA';
-import { createBlogInput } from './input/create.blog.input.type';
-import { CreateBlogCommand } from './UseCase/create.blog.usecase';
 import { BlogViewModel } from './output/blog.view.model';
 import { GetBlogCommand } from './UseCase/get.blog.usecase';
 import { GetAllPostForOutput } from './output/get.all.post.output.type';
-import {
-  GetAllPostsForBlog,
-  GetAllPostsForBlogCommand,
-} from './UseCase/get.posts.for.blog';
+import { GetAllPostsForBlogCommand } from './UseCase/get.posts.for.blog';
 @UseGuards(AuthGuard)
 @Controller('blogs')
 export class BloggersSaController {
@@ -51,11 +35,14 @@ export class BloggersSaController {
     return res.execute();
   }
   @Get(':id/posts')
-  async getAllPostsByBlog(@Param('id') id: string) {
+  async getAllPostsByBlog(
+    @Param('id') id: string,
+    @Query() data: GetAllPostsForBlogCommand,
+  ) {
     const res = await this.commandBus.execute<
-      GetAllPostsForBlog,
+      GetAllPostsForBlogCommand,
       InterlayerNotice<Pagination<GetAllPostForOutput[]>>
-    >(new GetAllPostsForBlogCommand());
-    return;
+    >(new GetAllPostsForBlogCommand(data, id));
+    return res.execute();
   }
 }
