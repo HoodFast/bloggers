@@ -38,7 +38,7 @@ export class BlogsQueryRepository {
       pagesCount,
       page: data.pageNumber,
       pageSize: data.pageSize,
-      totalCount: 0,
+      totalCount: res[1],
       items: items,
     };
   }

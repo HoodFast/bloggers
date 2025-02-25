@@ -3,48 +3,40 @@ import { InterlayerNotice } from '../../../../base/models/inter.layer';
 import { GetBlogInput } from '../input/get.all.blog.input.type';
 import { SortDirection } from '../../../../base/enum/sortBy.enum';
 import { Pagination } from '../../../../base/types/pagination';
-import { BlogViewModelSA } from '../output/blog.view.model.SA';
-import { BlogsQueryRepository } from '../../infrastructure/blogs.query.repository';
-import { BlogViewModel } from '../output/blog.view.model';
-import { GetAllPostForOutput } from "../output/get.all.post.output.type";
-import { PostsQueryRepository } from "../../../posts/infrastructure/posts.query.repository";
+import { GetAllPostForOutput } from '../output/get.all.post.output.type';
+import { PostsQueryRepository } from '../../../posts/infrastructure/posts.query.repository';
+import { GetPostForBlogInput } from '../input/get.all.posts.for.blog.input.type';
 
-export class GetAllPostsForBlog{
-  public data:any
+export class GetAllPostsForBlogCommand {
+  constructor(
+    public data: any,
     public blogId: string,
-
   ) {}
 }
 
-@QueryHandler(GetAllPostsForBlog)
+@QueryHandler(GetAllPostsForBlogCommand)
 export class GetAllBlogUseCase
   implements
     IQueryHandler<
-      GetAllPostsForBlog,
-      InterlayerNotice<Pagination<GetAllPostForOutput>>
+      GetAllPostsForBlogCommand,
+      InterlayerNotice<Pagination<GetAllPostForOutput[]>>
     >
 {
   constructor(private postQueryRepository: PostsQueryRepository) {}
 
   async execute(
-    command: GetAllPostsForBlog,
-  ): Promise<
-    InterlayerNotice<Pagination<GetAllPostForOutput>>
-  > {
-    const notice = new InterlayerNotice<
-      Pagination<GetAllPostForOutput>
-    >();
-    const sortData: GetBlogInput = {
-      searchNameTerm: command.data.searchNameTerm ?? '',
+    command: GetAllPostsForBlogCommand,
+  ): Promise<InterlayerNotice<Pagination<GetAllPostForOutput[]>>> {
+    const notice = new InterlayerNotice<Pagination<GetAllPostForOutput[]>>();
+    const sortData: GetPostForBlogInput = {
       sortBy: command.data.sortBy ?? 'createdAt',
       sortDirection: command.data.sortDirection ?? SortDirection.desc,
-      pageNumber: command.data.pageNumber
-        ? +command.data.pageNumber
-        : 1,
+      pageNumber: command.data.pageNumber ? +command.data.pageNumber : 1,
       pageSize: command.data.pageSize ? +command.data.pageSize : 10,
     };
     const result = await this.postQueryRepository.getAllPotForBlog(
-      command.blogId
+      sortData,
+      command.blogId,
     );
 
     if (!result) {

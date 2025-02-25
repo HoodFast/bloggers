@@ -20,6 +20,11 @@ import { createBlogInput } from './input/create.blog.input.type';
 import { CreateBlogCommand } from './UseCase/create.blog.usecase';
 import { BlogViewModel } from './output/blog.view.model';
 import { GetBlogCommand } from './UseCase/get.blog.usecase';
+import { GetAllPostForOutput } from './output/get.all.post.output.type';
+import {
+  GetAllPostsForBlog,
+  GetAllPostsForBlogCommand,
+} from './UseCase/get.posts.for.blog';
 @UseGuards(AuthGuard)
 @Controller('blogs')
 export class BloggersSaController {
@@ -47,6 +52,10 @@ export class BloggersSaController {
   }
   @Get(':id/posts')
   async getAllPostsByBlog(@Param('id') id: string) {
+    const res = await this.commandBus.execute<
+      GetAllPostsForBlog,
+      InterlayerNotice<Pagination<GetAllPostForOutput[]>>
+    >(new GetAllPostsForBlogCommand());
     return;
   }
 }
