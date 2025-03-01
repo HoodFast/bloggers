@@ -4,13 +4,13 @@ import { CreateUserCommand } from './useCase/create.user.usecase';
 import { CommandBus } from '@nestjs/cqrs';
 import { InterlayerNotice } from '../../../base/models/inter.layer';
 import { OutputUsersType } from './output/user.output';
-import { AuthGuard } from '../../../guards/auth.guard';
+import { AdminAuthGuard } from '../../../guards/admin-auth-guard.service';
 
 @Controller('sa/users')
 export class UsersController {
   constructor(protected commandBus: CommandBus) {}
   @HttpCode(201)
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post()
   async createUser(@Body() data: createUserInput) {
     const command = new CreateUserCommand(

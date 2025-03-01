@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminAuthGuard implements CanActivate {
   constructor() {}
 
   canActivate(

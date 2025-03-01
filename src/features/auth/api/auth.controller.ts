@@ -116,7 +116,6 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req: Request) {
     const token = req.cookies.refreshToken;
-
     const command = new LogoutCommand(token);
     const res = await this.commandBus.execute<
       LogoutCommand,

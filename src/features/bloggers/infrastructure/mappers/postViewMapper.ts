@@ -1,4 +1,4 @@
-import { Post } from '../../../posts/domain/post.entity';
+import { likeStatuses, Post } from '../../../posts/domain/post.entity';
 import { GetAllPostForOutput } from '../../api/output/get.all.post.output.type';
 
 export const PostsViewMapper = (post: Post): GetAllPostForOutput => {
@@ -10,6 +10,17 @@ export const PostsViewMapper = (post: Post): GetAllPostForOutput => {
     blogId: post.blog.id,
     blogName: post.blog.name,
     createdAt: post.createdAt,
-    extendedLikesInfo: post.likes as any,
+    extendedLikesInfo: {
+      likesCount: 0,
+      dislikesCount: 0,
+      myStatus: likeStatuses.none,
+      newestLikes: [
+        {
+          addedAt: new Date(),
+          userId: '',
+          login: '',
+        },
+      ],
+    },
   };
 };

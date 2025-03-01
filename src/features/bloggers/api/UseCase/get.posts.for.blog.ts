@@ -1,6 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { InterlayerNotice } from '../../../../base/models/inter.layer';
-import { GetBlogInput } from '../input/get.all.blog.input.type';
 import { SortDirection } from '../../../../base/enum/sortBy.enum';
 import { Pagination } from '../../../../base/types/pagination';
 import { GetAllPostForOutput } from '../output/get.all.post.output.type';
@@ -15,7 +14,7 @@ export class GetAllPostsForBlogCommand {
 }
 
 @QueryHandler(GetAllPostsForBlogCommand)
-export class GetAllBlogUseCase
+export class GetAllPostsForBlogUseCase
   implements
     IQueryHandler<
       GetAllPostsForBlogCommand,

@@ -8,7 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '../../../guards/auth.guard';
+import { AdminAuthGuard } from '../../../guards/admin-auth-guard.service';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetBlogInput } from './input/get.all.blog.input.type';
 import { GetAllBlogsCommand } from './UseCase/get.all.blogs.usecase';
@@ -18,7 +18,7 @@ import { BlogViewModelSA } from './output/blog.view.model.SA';
 import { createBlogInput } from './input/create.blog.input.type';
 import { CreateBlogCommand } from './UseCase/create.blog.usecase';
 import { BlogViewModel } from './output/blog.view.model';
-@UseGuards(AuthGuard)
+@UseGuards(AdminAuthGuard)
 @Controller('sa/blogs')
 export class BloggersSaController {
   constructor(

@@ -25,6 +25,7 @@ export class PostsQueryRepository {
         .skip(offset)
         .take(pageSize)
         .getMany();
+
       const pagesCount = Math.ceil(res.length / pageSize);
       return {
         pagesCount,
