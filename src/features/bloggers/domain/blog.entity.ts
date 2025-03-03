@@ -28,7 +28,7 @@ export class Blog extends BaseEntity {
     onDelete: 'CASCADE',
   })
   owner: User;
-  @Column()
+  @Column({ nullable: true })
   ownerId: string;
   @OneToMany(() => Post, (post) => post.blog, {
     cascade: true,

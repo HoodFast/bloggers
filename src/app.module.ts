@@ -1,8 +1,5 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration, {
-  ConfigServiceType,
-  validate,
-} from 'src/settings/configurations';
+
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,6 +13,10 @@ import { JwtService } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SessionQueryRepository } from './features/auth/sessions/infrastructure/session.query.repository';
 import { Session } from './features/auth/sessions/domain/session.entity';
+import configuration, {
+  ConfigServiceType,
+  validate,
+} from './settings/configurations';
 @Module({
   imports: [
     CqrsModule,
@@ -34,6 +35,7 @@ import { Session } from './features/auth/sessions/domain/session.entity';
         const sqlDataBaseSettings = configService.get('dataBaseSettings', {
           infer: true,
         });
+
         return {
           type: 'postgres',
           host: sqlDataBaseSettings?.SQL_HOST,

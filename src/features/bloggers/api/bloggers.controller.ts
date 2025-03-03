@@ -9,9 +9,9 @@ import { BlogViewModel } from './output/blog.view.model';
 import { GetBlogCommand } from './UseCase/get.blog.usecase';
 import { GetAllPostForOutput } from './output/get.all.post.output.type';
 import { GetAllPostsForBlogCommand } from './UseCase/get.posts.for.blog';
-@UseGuards(AdminAuthGuard)
+
 @Controller('blogs')
-export class BloggersSaController {
+export class BloggersController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
@@ -19,6 +19,7 @@ export class BloggersSaController {
 
   @Get()
   async getAllBlogs(@Query() data: GetBlogInput) {
+    debugger;
     const command = new GetAllBlogsCommand(data, false);
     const res = await this.queryBus.execute<
       GetAllBlogsCommand,

@@ -29,6 +29,7 @@ export class GetAllBlogUseCase
   ): Promise<
     InterlayerNotice<Pagination<BlogViewModelSA[] | BlogViewModel[]>>
   > {
+    debugger;
     const notice = new InterlayerNotice<
       Pagination<BlogViewModelSA[] | BlogViewModel[]>
     >();

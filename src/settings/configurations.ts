@@ -2,8 +2,8 @@ import { ConfigService } from '@nestjs/config';
 import { ValidateNested, validateSync } from 'class-validator';
 import { ApiSettings } from './apiSettings/api.settings';
 import { DataBaseSettings } from './dataBaseSetings/data.base.settings';
-import * as process from 'process';
 import { JwtSettings } from './jwtSettings/jwt.settings';
+require('dotenv').config();
 
 export type EnvironmentVariable = { [key: string]: string };
 
