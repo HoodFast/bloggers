@@ -41,7 +41,7 @@ export class UsersQueryRepository {
     } = data;
     const skip = (pageNumber - 1) * pageSize;
     const queryBuilder = await this.usersRepository.createQueryBuilder('user');
-
+    const totalCount = await queryBuilder.getMany();
     if (searchLoginTerm) {
       queryBuilder.andWhere('user.login ILIKE :searchLoginTerm', {
         searchLoginTerm: `%${searchLoginTerm}%`,
@@ -52,19 +52,21 @@ export class UsersQueryRepository {
         searchEmailTerm: `%${searchEmailTerm}%`,
       });
     }
+
     queryBuilder
       .orderBy(`user.${sortBy}`, sortDirection)
       .skip(skip)
       .take(pageSize);
 
     const res: any = await queryBuilder.getMany();
-    const pagesCount = Math.ceil(res.length / pageSize);
+    debugger;
+    const pagesCount = Math.ceil(totalCount.length / pageSize);
 
     return {
       pagesCount,
       page: pageNumber,
       pageSize,
-      totalCount: res.length,
+      totalCount: totalCount.length,
       items: res,
     };
   }

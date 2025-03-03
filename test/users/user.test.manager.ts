@@ -18,7 +18,48 @@ export class UserTestManager {
   async deleteAll() {
     await request(this.app.getHttpServer()).delete(`/testing/all-data`);
   }
+  async createManyUser(count: number) {
+    const users: {
+      id?: string;
+      login?: string;
+      email?: string;
+      accessToken?: string;
+      refreshToken?: string;
+    }[] = [];
+    const usersTestData = [];
+    for (let i = 0; i < count; i++) {
+      const uniqueChar = this.generateRandomString();
+      usersTestData.push({
+        login: `login${uniqueChar}`,
+        password: `password`,
+        email: `rabota-trassa${uniqueChar}@mail.ru`,
+      });
+    }
+    await Promise.all(
+      usersTestData.map(async (i) => {
+        const user = await request(this.app.getHttpServer())
+          .post('/sa/users')
+          .auth('admin', 'qwerty')
+          .send(i);
+        users.push({
+          login: user.body.login,
+          email: user.body.email,
+          id: user.body.id,
+        });
+      }),
+    );
+    await Promise.all(
+      users.map(async (i) => {
+        const accessToken = await request(this.app.getHttpServer())
+          .post('/auth/login')
+          .send({ loginOrEmail: i.login, password: 'password' });
+        const user = users.find((u) => u.login === i.login);
+        user.accessToken = accessToken.body.accessToken;
+      }),
+    );
 
+    return users;
+  }
   async createUser(createUserData, expectStatus: number) {
     const response = await request(this.app.getHttpServer())
       .post('/sa/users')
@@ -44,7 +85,18 @@ export class UserTestManager {
         .split(';')[0],
     };
   }
+  generateRandomString() {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
 
+    for (let i = 0; i < 4; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
   checkValidateErrors(response: any) {
     const result = response.body;
 

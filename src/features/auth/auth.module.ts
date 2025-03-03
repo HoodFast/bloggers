@@ -27,8 +27,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     TypeOrmModule.forFeature([Session]),
     ThrottlerModule.forRoot([
       {
-        ttl: 60000,
-        limit: 2,
+        ttl: 10,
+        limit: 40,
       },
     ]),
   ],
