@@ -19,7 +19,6 @@ export class BloggersController {
 
   @Get()
   async getAllBlogs(@Query() data: GetBlogInput) {
-    debugger;
     const command = new GetAllBlogsCommand(data, false);
     const res = await this.queryBus.execute<
       GetAllBlogsCommand,

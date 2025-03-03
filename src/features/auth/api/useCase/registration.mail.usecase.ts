@@ -4,7 +4,7 @@ import {
   InterlayerNotice,
 } from '../../../../base/models/inter.layer';
 
-import { UsersQueryRepo } from '../../../users/infrastructure/users.query.repository';
+import { UsersQueryRepository } from '../../../users/infrastructure/users.query.repository';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 export class RegistrationMailCommand {
   constructor(public code: string) {}
@@ -15,7 +15,7 @@ export class RegistrationMailUseCase
   implements ICommandHandler<RegistrationMailCommand, InterlayerNotice<boolean>>
 {
   constructor(
-    private usersQueryRepository: UsersQueryRepo,
+    private usersQueryRepository: UsersQueryRepository,
     private usersRepository: UsersRepository,
   ) {}
 

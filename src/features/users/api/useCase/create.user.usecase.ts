@@ -2,7 +2,7 @@ import { OutputUsersType } from '../output/user.output';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InterlayerNotice } from '../../../../base/models/inter.layer';
 import { UsersRepository } from '../../infrastructure/users.repository';
-import { UsersQueryRepo } from '../../infrastructure/users.query.repository';
+import { UsersQueryRepository } from '../../infrastructure/users.query.repository';
 import { CreateUserType } from '../../infrastructure/types/create.user.type';
 
 export class CreateUserCommand {
@@ -21,7 +21,7 @@ export class CreateUserUseCase
 {
   constructor(
     private usersSqlRepository: UsersRepository,
-    private usersSqlQueryRepository: UsersQueryRepo,
+    private usersSqlQueryRepository: UsersQueryRepository,
   ) {}
 
   async execute(

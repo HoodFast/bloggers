@@ -17,6 +17,7 @@ import configuration, {
   ConfigServiceType,
   validate,
 } from './settings/configurations';
+import { TestingModule } from './features/testing/testing.module';
 @Module({
   imports: [
     CqrsModule,
@@ -56,6 +57,7 @@ import configuration, {
     AuthModule,
     BloggersModule,
     UsersModule,
+    TestingModule,
   ],
   controllers: [AppController],
   providers: [

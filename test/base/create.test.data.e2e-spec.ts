@@ -24,23 +24,34 @@ describe('test data', () => {
       {
         name: 'Test Blog 1',
         description: 'Description for Test Blog 1',
-        websiteUrl: 'http://testblog1.com',
+        websiteUrl: 'https://testblog1.com',
       },
       {
         name: 'Another Blog',
         description: 'Description for Another Blog',
-        websiteUrl: 'http://anotherblog.com',
+        websiteUrl: 'https://anotherblog.com',
       },
       {
         name: 'Test Blog 2',
         description: 'Description for Test Blog 2',
-        websiteUrl: 'http://testblog2.com',
+        websiteUrl: 'https://testblog2.com',
       },
     ];
 
-    await testData.forEach((i) => {
-      request(httpServer).post('/sa/blogs').auth('admin', 'qwerty').send(i);
-    });
+    await Promise.all(
+      testData.map(async (i) => {
+        await request(httpServer)
+          .post('/sa/blogs')
+          .auth('admin', 'qwerty')
+          .send(i);
+      }),
+    );
+    // await testData.forEach((i) => {
+    //   const response = request(httpServer)
+    //     .post('/sa/blogs')
+    //     .auth('admin', 'qwerty')
+    //     .send(i);
+    // });
   });
 
   afterAll(async () => {});

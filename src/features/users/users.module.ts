@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './api/users.controller';
-import { UsersQueryRepo } from './infrastructure/users.query.repository';
+import { UsersQueryRepository } from './infrastructure/users.query.repository';
 import { UsersRepository } from './infrastructure/users.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './domain/user.entity';
@@ -12,6 +12,7 @@ import { EmailConfirmation } from './domain/emailConfirmation';
 import { SessionQueryRepository } from '../auth/sessions/infrastructure/session.query.repository';
 import { SessionRepository } from '../auth/sessions/infrastructure/session.repository';
 import { Session } from '../auth/sessions/domain/session.entity';
+import { GetAllUsersUseCase } from './api/useCase/get.all.users.usecase';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { Session } from '../auth/sessions/domain/session.entity';
   ],
   controllers: [UsersController],
   providers: [
-    UsersQueryRepo,
+    GetAllUsersUseCase,
+    UsersQueryRepository,
     SessionQueryRepository,
     SessionRepository,
     UsersRepository,
@@ -28,6 +30,6 @@ import { Session } from '../auth/sessions/domain/session.entity';
     MyJwtService,
     JwtService,
   ],
-  exports: [UsersQueryRepo, UsersRepository, MyJwtService],
+  exports: [UsersQueryRepository, UsersRepository, MyJwtService],
 })
 export class UsersModule {}

@@ -1,8 +1,12 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../domain/user.entity';
 import { Repository } from 'typeorm';
+import { Pagination } from '../../../base/types/pagination';
+import { OutputUsersType } from '../api/output/user.output';
+import { GetAllUsersSortData } from '../api/types/get.all.users.sort.data';
+import { skip } from 'rxjs';
 
-export class UsersQueryRepo {
+export class UsersQueryRepository {
   constructor(
     @InjectRepository(User) protected usersRepository: Repository<User>,
   ) {}
@@ -23,5 +27,45 @@ export class UsersQueryRepo {
       .where('emailConfirmation.confirmationCode = :code', { code })
       .getOne();
     return res;
+  }
+  async getAllUsers(
+    data: GetAllUsersSortData,
+  ): Promise<Pagination<OutputUsersType[]>> {
+    const {
+      searchEmailTerm,
+      searchLoginTerm,
+      sortBy,
+      sortDirection,
+      pageSize,
+      pageNumber,
+    } = data;
+    const skip = (pageNumber - 1) * pageSize;
+    const queryBuilder = await this.usersRepository.createQueryBuilder('user');
+
+    if (searchLoginTerm) {
+      queryBuilder.andWhere('user.login ILIKE :searchLoginTerm', {
+        searchLoginTerm: `%${searchLoginTerm}%`,
+      });
+    }
+    if (searchEmailTerm) {
+      queryBuilder.andWhere('user.email ILIKE :searchEmailTerm', {
+        searchEmailTerm: `%${searchEmailTerm}%`,
+      });
+    }
+    queryBuilder
+      .orderBy(`user.${sortBy}`, sortDirection)
+      .skip(skip)
+      .take(pageSize);
+
+    const res: any = await queryBuilder.getMany();
+    const pagesCount = Math.ceil(res.length / pageSize);
+
+    return {
+      pagesCount,
+      page: pageNumber,
+      pageSize,
+      totalCount: res.length,
+      items: res,
+    };
   }
 }
