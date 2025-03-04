@@ -28,7 +28,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 @Controller('auth')
 export class AuthController {
   constructor(protected commandBus: CommandBus) {}
-
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(
@@ -103,6 +103,7 @@ export class AuthController {
     >(command);
     return res.execute();
   }
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async registrationUser(@Body() data: InputRegistrationUser) {
     const command = new RegistrationCommand(data);

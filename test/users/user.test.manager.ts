@@ -18,6 +18,14 @@ export class UserTestManager {
   async deleteAll() {
     await request(this.app.getHttpServer()).delete(`/testing/all-data`);
   }
+  async registrationUser(login: string, password: string, email: string) {
+    const res = await request(this.app.getHttpServer())
+      .post('/auth/registration')
+      .send({ login, password, email })
+      .expect(204);
+
+    return res.body;
+  }
   async createManyUser(count: number) {
     const users: {
       id?: string;
@@ -58,7 +66,6 @@ export class UserTestManager {
         user.refreshToken = data.headers['set-cookie'][0].split('=')[1];
       }),
     );
-
     return users;
   }
   async createUser(createUserData, expectStatus: number) {

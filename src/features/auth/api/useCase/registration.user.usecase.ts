@@ -34,7 +34,8 @@ export class RegistrationUseCase
     const mailCheck = await this.usersRepository.checkExistEmail(
       command.data.email,
     );
-    if (!loginCheck) {
+
+    if (loginCheck) {
       notice.addError(
         'login is already exist',
         'error',
@@ -42,7 +43,7 @@ export class RegistrationUseCase
       );
       return notice;
     }
-    if (!mailCheck) {
+    if (mailCheck) {
       notice.addError(
         'email is already exist',
         'error',

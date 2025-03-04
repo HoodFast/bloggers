@@ -5,6 +5,7 @@ import { AppModule } from '../../src/app.module';
 import { TestManager } from '../test.manager';
 import { BlogTestManager } from '../blogs/blog.test.manager';
 import { UserTestManager } from '../users/user.test.manager';
+import { appSettings } from '../../src/settings/app.settings';
 
 describe('test data', () => {
   let app: INestApplication;
@@ -20,6 +21,7 @@ describe('test data', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    appSettings(app);
     httpServer = app.getHttpServer();
     testManager = new TestManager(app);
     blogTestManager = new BlogTestManager(app);
