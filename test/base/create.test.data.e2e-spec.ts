@@ -40,6 +40,5 @@ describe('test data', () => {
   });
   it('create many users  ', async () => {
     const users = await userTestManager.createManyUser(2);
-    debugger;
   });
 });

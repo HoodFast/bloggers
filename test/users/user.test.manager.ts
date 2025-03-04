@@ -50,11 +50,12 @@ export class UserTestManager {
     );
     await Promise.all(
       users.map(async (i) => {
-        const accessToken = await request(this.app.getHttpServer())
+        const data = await request(this.app.getHttpServer())
           .post('/auth/login')
           .send({ loginOrEmail: i.login, password: 'password' });
         const user = users.find((u) => u.login === i.login);
-        user.accessToken = accessToken.body.accessToken;
+        user.accessToken = data.body.accessToken;
+        user.refreshToken = data.headers['set-cookie'][0].split('=')[1];
       }),
     );
 

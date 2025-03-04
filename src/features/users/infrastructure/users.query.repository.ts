@@ -59,7 +59,7 @@ export class UsersQueryRepository {
       .take(pageSize);
 
     const res: any = await queryBuilder.getMany();
-    debugger;
+
     const pagesCount = Math.ceil(totalCount.length / pageSize);
 
     return {
