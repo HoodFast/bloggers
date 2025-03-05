@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -23,6 +24,7 @@ export class User {
   createdAt: Date;
   @Column({ nullable: true })
   recoveryCode: string;
+  @JoinColumn()
   @OneToOne(() => EmailConfirmation)
   emailConfirmation: EmailConfirmation;
   @OneToMany(() => Blog, (blog) => blog.owner, { onDelete: 'CASCADE' })

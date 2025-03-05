@@ -6,10 +6,14 @@ import { OutputUsersType } from '../api/output/user.output';
 import { outputUserMapper } from './mappers/output.user.mapper';
 import { MyJwtService } from '../../auth/infrastructure/my.jwt.service';
 import * as bcrypt from 'bcrypt';
+import { EmailConfirmation } from '../domain/emailConfirmation';
+import { add } from 'date-fns/add';
 
 export class UsersRepository {
   constructor(
     @InjectRepository(User) protected usersRepository: Repository<User>,
+    @InjectRepository(User)
+    protected emailConfirmationRepository: Repository<EmailConfirmation>,
     protected myJwtService: MyJwtService,
   ) {}
   async createUser(data: CreateUserType): Promise<OutputUsersType | null> {
@@ -22,6 +26,14 @@ export class UsersRepository {
       user.email = data.email;
       user.login = data.login;
       const save = await this.usersRepository.save<User>(user);
+      const mail = new EmailConfirmation();
+      mail.userId = save.id;
+      mail.user = user;
+      mail.isConfirmed = false;
+      mail.expirationDate = add(new Date(), {
+        minutes: 15,
+      });
+      mail.confirmationCode = crypto.randomUUID();
       return outputUserMapper(save);
     } catch (e) {
       console.log(e);
@@ -37,6 +49,12 @@ export class UsersRepository {
     return !!user;
   }
   async getUserByEmail(email: string): Promise<User> {
+    const res = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.emailConfirmation', 'emailConfirmation')
+      // .where('user.email = :email', { email })
+      .getOne();
+    debugger;
     const user = await this.usersRepository.findOne({ where: { email } });
     if (!user) return null;
     return user;

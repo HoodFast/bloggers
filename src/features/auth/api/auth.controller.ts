@@ -52,10 +52,10 @@ export class AuthController {
     }
     return { accessToken: result.data.accessToken };
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
-  async recoveryPassword(@Body() email: string) {
-    const command = new RecoveryPasswordCommand(email);
+  async recoveryPassword(@Body() data: { email: string }) {
+    const command = new RecoveryPasswordCommand(data.email);
     const res = await this.commandBus.execute<
       RecoveryPasswordCommand,
       InterlayerNotice<boolean>

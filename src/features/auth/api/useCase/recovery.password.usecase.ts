@@ -25,6 +25,7 @@ export class RecoveryUseCase
   ): Promise<InterlayerNotice<boolean>> {
     const notice = new InterlayerNotice<boolean>();
     const user = await this.usersRepository.getUserByEmail(command.email);
+
     if (!user) {
       notice.addError('user not exist', 'error', ERRORS_CODE.NOT_FOUND);
       return notice;

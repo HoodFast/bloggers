@@ -26,8 +26,10 @@ export class EmailService {
         subject,
         html: message,
       });
+
       return !!info;
     } catch (e) {
+      debugger;
       return e;
     }
   }

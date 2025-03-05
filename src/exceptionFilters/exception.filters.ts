@@ -19,7 +19,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (status === 429) {
       return response.sendStatus(429);
     }
-    debugger;
     if (errorsCode.includes(status)) {
       const errorResponce: {
         errorsMessages: { message: string; field: string }[];
