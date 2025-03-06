@@ -29,7 +29,6 @@ describe('auth (e2e)', () => {
       .overrideProvider(EmailService)
       .useValue(sendMailerMock)
       .compile();
-
     app = moduleFixture.createNestApplication();
     appSettings(app);
     await app.init();
@@ -44,6 +43,7 @@ describe('auth (e2e)', () => {
   });
 
   afterAll(async () => {
+
     await request(httpServer).delete('/testing/all-data');
     const dataSource = app.get(DataSource);
     await dataSource.destroy();
