@@ -146,8 +146,8 @@ describe("auth (e2e)", () => {
     );
     const data = await request(httpServer)
       .post("/auth/login")
-      .send({ loginOrEmail: testLogin, password: testPassword });
-
+      .send({ loginOrEmail: testLogin, password: testPassword }).expect(200);
+debugger
     const oldRefreshToken = data.headers["set-cookie"][0].split("=")[1];
     const oldAccessToken = data.body.accessToken;
     const res = await request(httpServer)
@@ -159,6 +159,6 @@ describe("auth (e2e)", () => {
     const wrongRes = await request(httpServer)
       .post("/auth/refresh-token")
       .set("Cookie", [`refreshToken=${oldRefreshToken}`])
-      // .expect(401);
+      .expect(401);
   });
 });

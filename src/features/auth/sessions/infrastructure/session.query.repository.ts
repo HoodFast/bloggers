@@ -33,7 +33,7 @@ export class SessionQueryRepository {
       const session = await this.sessionRepository.findOne({
         where: { userId, iat: date }
       });
-
+debugger
       if (!session) return null;
       return session;
     } catch (e) {
