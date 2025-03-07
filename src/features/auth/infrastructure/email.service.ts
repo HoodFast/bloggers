@@ -29,7 +29,7 @@ export class EmailService {
 
       return !!info;
     } catch (e) {
-      debugger;
+
       return e;
     }
   }

@@ -111,7 +111,7 @@ describe('auth (e2e)', () => {
     await request(httpServer)
       .post('/auth/password-recovery')
       .send({ email: testMail });
-    debugger;
+
     const user: User = await userRepository.findOne({
       where: { email: testMail },
     });
