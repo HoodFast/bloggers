@@ -72,10 +72,11 @@ export class MyJwtService {
   }
   async getTokenData(
     token: string,
-  ): Promise<{ userId: string; title: string } | null> {
+  ): Promise<{ userId: string; title: string,iat:Date } | null> {
     try {
       const decoded = await this.jwtService.decode(token);
-      return { userId: decoded.userId, title: decoded.title };
+
+      return { userId: decoded.userId, title: decoded.title, iat: decoded.iat };
     } catch (e) {
       console.log(e);
       return null;

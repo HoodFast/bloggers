@@ -19,6 +19,7 @@ import { RegistrationMailUseCase } from './api/useCase/registration.mail.usecase
 import { RegistrationUseCase } from './api/useCase/registration.user.usecase';
 import { LogoutUseCase } from './api/useCase/logout.usecase';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { GenerateRefreshTokensPairUseCase } from "./api/useCase/generate.refresh.tokens.pair.usecase";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
   ],
   controllers: [AuthController],
   providers: [
+    GenerateRefreshTokensPairUseCase,
     SessionQueryRepository,
     LogoutUseCase,
     RegistrationUseCase,

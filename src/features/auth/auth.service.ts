@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersQueryRepository } from '../users/infrastructure/users.query.repository';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { outputUserMapper } from '../users/infrastructure/mappers/output.user.mapper';
 @Injectable()
 export class AuthService {

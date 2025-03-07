@@ -29,6 +29,12 @@ export class GenerateRefreshTokensPairUseCase
   ): Promise<InterlayerNotice<LoginOutput>> {
     const notice = new InterlayerNotice<LoginOutput>();
     const session = await this.sessionService.getCurrentSession(command.token);
+
+    if(!session){
+      notice.addError('invalid token', 'error', ERRORS_CODE.UNAUTHORIZED);
+      return notice;
+    }
+
     const accessToken = await this.myJwtService.createAccessToken(
       session.userId,
       session.title,

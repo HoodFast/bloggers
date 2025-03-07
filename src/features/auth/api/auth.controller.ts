@@ -88,6 +88,9 @@ export class AuthController {
       GenerateRefreshTokensPairCommand,
       InterlayerNotice<LoginOutput>
     >(command);
+    if(result.hasError()){
+      return result.execute()
+    }
     res.cookie('refreshToken', result.data.refreshToken, {
       httpOnly: true,
       secure: true,

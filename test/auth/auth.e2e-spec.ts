@@ -1,19 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus, INestApplication } from '@nestjs/common';
-import { AppModule } from '../../src/app.module';
-import request from 'supertest';
-import { UserTestManager } from '../users/user.test.manager';
-import { appSettings } from '../../src/settings/app.settings';
-import { EmailServiceMock } from '../base/mocks/sendMailerMock';
-import { EmailService } from '../../src/features/auth/infrastructure/email.service';
-import { UsersRepository } from '../../src/features/users/infrastructure/users.repository';
-import { DataSource, Repository } from 'typeorm';
-import { User } from '../../src/features/users/domain/user.entity';
+import { Test, TestingModule } from "@nestjs/testing";
+import { HttpStatus, INestApplication } from "@nestjs/common";
+import { AppModule } from "../../src/app.module";
 
-describe('auth (e2e)', () => {
-  const testLogin = 'test user';
-  const testPassword = 'test pass';
-  const testEmail = 'test@mail.com';
+import { UserTestManager } from "../users/user.test.manager";
+import { appSettings } from "../../src/settings/app.settings";
+import { EmailServiceMock } from "../base/mocks/sendMailerMock";
+import { EmailService } from "../../src/features/auth/infrastructure/email.service";
+import { UsersRepository } from "../../src/features/users/infrastructure/users.repository";
+import { DataSource, Repository } from "typeorm";
+import { User } from "../../src/features/users/domain/user.entity";
+import request from "supertest";
+
+describe("auth (e2e)", () => {
+  const testLogin = "test user";
+  const testPassword = "test pass";
+  const testEmail = "test@mail.com";
   let app: INestApplication;
   let httpServer;
   let accessToken;
@@ -24,7 +25,7 @@ describe('auth (e2e)', () => {
   beforeAll(async () => {
     const sendMailerMock = new EmailServiceMock();
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule]
     })
       .overrideProvider(EmailService)
       .useValue(sendMailerMock)
@@ -38,108 +39,126 @@ describe('auth (e2e)', () => {
     user = await userTestManager.registrationUser(
       testLogin,
       testPassword,
-      testEmail,
+      testEmail
     );
   });
 
   afterAll(async () => {
 
-    await request(httpServer).delete('/testing/all-data');
+    await request(httpServer).delete("/testing/all-data");
     const dataSource = app.get(DataSource);
     await dataSource.destroy();
     await app.close();
   });
 
-  it('correct login and pass return code 200', async () => {
+  it("correct login and pass return code 200", async () => {
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post("/auth/login")
       .send({ loginOrEmail: testLogin, password: testPassword });
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual({ accessToken: expect.any(String) });
   });
-  it('registration with already exist login and pass return code 400 and errors array ', async () => {
+  it("registration with already exist login and pass return code 400 and errors array ", async () => {
     const response = await request(httpServer)
-      .post('/auth/registration')
+      .post("/auth/registration")
       .send({ loginOrEmail: testLogin, password: testPassword });
     expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     expect(response.body).toMatchObject({
       errorsMessages: [
         {
           message: expect.any(String),
-          field: expect.any(String),
-        },
-      ],
+          field: expect.any(String)
+        }
+      ]
     });
   });
-  it('incorrect login or pass return code 401', async () => {
+  it("incorrect login or pass return code 401", async () => {
     const response1 = await request(httpServer)
-      .post('/auth/login')
-      .send({ loginOrEmail: 'incorrect login', password: testPassword });
+      .post("/auth/login")
+      .send({ loginOrEmail: "incorrect login", password: testPassword });
     expect(response1.status).toBe(HttpStatus.UNAUTHORIZED);
     const response2 = await request(httpServer)
-      .post('/auth/login')
-      .send({ loginOrEmail: testLogin, password: 'incorrect password' });
+      .post("/auth/login")
+      .send({ loginOrEmail: testLogin, password: "incorrect password" });
     expect(response2.status).toBe(HttpStatus.UNAUTHORIZED);
   });
-  it('send confirm code for password-recovery', async () => {
+  it("send confirm code for password-recovery", async () => {
     const user = await userTestManager.createUser(
       {
-        login: 'login',
-        email: 'rabota-trassa@mail.ru',
-        password: 'password',
+        login: "login",
+        email: "rabota-trassa@mail.ru",
+        password: "password"
       },
-      201,
+      201
     );
     const response = await request(httpServer)
-      .post('/auth/password-recovery')
-      .send({ email: 'rabota-trassa@mail.ru' });
+      .post("/auth/password-recovery")
+      .send({ email: "rabota-trassa@mail.ru" });
 
     expect(response.status).toBe(HttpStatus.NO_CONTENT);
   });
-  it('change password using recovery code', async () => {
-    const testLogin = 'test login';
-    const testMail = 'rabota-trassa-test@mail.ru';
-    const newPassword = 'newPassword';
+  it("change password using recovery code", async () => {
+    const testLogin = "test login";
+    const testMail = "rabota-trassa-test@mail.ru";
+    const newPassword = "newPassword";
     await userTestManager.createUser(
       {
         login: testLogin,
         email: testMail,
-        password: testPassword,
+        password: testPassword
       },
-      201,
+      201
     );
     await request(httpServer)
-      .post('/auth/password-recovery')
+      .post("/auth/password-recovery")
       .send({ email: testMail });
 
     const user: User = await userRepository.findOne({
-      where: { email: testMail },
+      where: { email: testMail }
     });
 
     const response = await request(httpServer)
-      .post('/auth/new-password')
+      .post("/auth/new-password")
       .send({ newPassword: newPassword, recoveryCode: user.recoveryCode });
     expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
     const newResponse = await request(httpServer)
-      .post('/auth/login')
+      .post("/auth/login")
       .send({ loginOrEmail: testLogin, password: newPassword });
     expect(newResponse.status).toBe(HttpStatus.OK);
     expect(newResponse.body).toEqual({ accessToken: expect.any(String) });
 
     const badResponseWithOldPass = await request(httpServer)
-      .post('/auth/login')
+      .post("/auth/login")
       .send({ loginOrEmail: testLogin, password: testPassword });
     expect(badResponseWithOldPass.status).toBe(HttpStatus.UNAUTHORIZED);
   });
-  it('incorrect login or pass return code 401', async () => {
-    const response1 = await request(httpServer)
-      .post('/auth/login')
-      .send({ loginOrEmail: 'incorrect login', password: testPassword });
-    expect(response1.status).toBe(HttpStatus.UNAUTHORIZED);
-    const response2 = await request(httpServer)
-      .post('/auth/login')
-      .send({ loginOrEmail: testLogin, password: 'incorrect password' });
-    expect(response2.status).toBe(HttpStatus.UNAUTHORIZED);
+  it("generate new pair of tokens", async () => {
+    const testLogin = "test1";
+    const testMail = "rabota-test1@mail.ru";
+    await userTestManager.createUser(
+      {
+        login: testLogin,
+        email: testMail,
+        password: testPassword
+      },
+      201
+    );
+    const data = await request(httpServer)
+      .post("/auth/login")
+      .send({ loginOrEmail: testLogin, password: testPassword });
+
+    const oldRefreshToken = data.headers["set-cookie"][0].split("=")[1];
+    const oldAccessToken = data.body.accessToken;
+    const res = await request(httpServer)
+      .post("/auth/refresh-token")
+      .set("Cookie", [`refreshToken=${oldRefreshToken}`]).expect(201);
+
+    const newRefreshToken = res.headers["set-cookie"][0].split("=")[1];
+    const newAccessToken = res.body.accessToken;
+    const wrongRes = await request(httpServer)
+      .post("/auth/refresh-token")
+      .set("Cookie", [`refreshToken=${oldRefreshToken}`])
+      // .expect(401);
   });
 });

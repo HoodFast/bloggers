@@ -12,10 +12,11 @@ export class SessionsService {
   ) {}
 
   async getCurrentSession(token: string) {
-    const { userId, title } = await this.myJwtService.getTokenData(token);
-    return await this.sessionQueryRepository.getSessionByUserAndTitle(
+    const { userId, title,iat } = await this.myJwtService.getTokenData(token);
+    return await this.sessionQueryRepository.getSessionByUserAndTitleAndIat(
       userId,
       title,
+      iat
     );
   }
 }

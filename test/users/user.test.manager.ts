@@ -74,7 +74,6 @@ export class UserTestManager {
       .auth('admin', 'qwerty')
       .send({ ...createUserData })
       .expect(expectStatus);
-
     return response;
   }
 
